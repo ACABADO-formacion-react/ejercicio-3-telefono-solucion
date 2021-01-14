@@ -4,7 +4,7 @@ function App() {
   const teclas = [...[...Array(10)].map((x, i) => i).slice(1), 0];
   const [telefono, setTelefono] = useState("");
   const [llamando, setLlamando] = useState(false);
-  let timer;
+  const [timer, setTimer] = useState(null);
   const esCompleto = () => telefono.length === 9;
   const anyadeDigito = (digito) => {
     if (esCompleto()) {
@@ -18,7 +18,10 @@ function App() {
   const llamar = (e) => {
     e.preventDefault();
     setLlamando(true);
-    timer = setTimeout(() => { console.log("Cuelgo"); colgar() }, 5000);
+    setTimer(setTimeout(() => {
+      console.log("Cuelgo automáticamente");
+      colgar()
+    }, 5000));
   }
   const colgar = (e) => {
     if (typeof e !== "undefined") {
