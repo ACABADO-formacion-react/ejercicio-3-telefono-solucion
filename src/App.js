@@ -1,4 +1,8 @@
 import { useState } from "react";
+import { Acciones } from "./componentes/Acciones";
+import { Display } from "./componentes/Display";
+import { Info } from "./componentes/Info";
+import { Teclado } from "./componentes/Teclado";
 
 function App() {
   const teclas = [...[...Array(10)].map((x, i) => i).slice(1), 0];
@@ -17,6 +21,9 @@ function App() {
   }
   const llamar = (e) => {
     e.preventDefault();
+    if (!esCompleto()) {
+      return;
+    }
     setLlamando(true);
     setTimer(setTimeout(() => {
       console.log("Cuelgo automáticamente");
@@ -33,26 +40,24 @@ function App() {
   }
   return (
     <div className="contenedor">
-      <span className={`mensaje${llamando ? "" : " off"}`}>Llamando...</span>
+      <Info llamando={llamando} />
       <main className="telefono">
         <div className="botones">
-          <ol className="teclado">
-            {
-              teclas.map(tecla => (
-                <li key={tecla} onClick={() => anyadeDigito(tecla)}>
-                  <button disabled={llamando}>{tecla}</button>
-                </li>
-              ))
-            }
-            <li>
-              <button className="big" onClick={borrar} disabled={llamando}>borrar</button>
-            </li>
-          </ol>
+          <Teclado
+            teclas={teclas}
+            llamando={llamando}
+            borrar={borrar}
+            anyadeDigito={anyadeDigito}
+          />
         </div>
         <div className="acciones">
-          <span className="numero">{telefono}</span>
-          {!llamando && <a href="llamar" onClick={llamar} className={`llamar${esCompleto() ? " activo" : ""}`}>Llamar</a>}
-          {llamando && <a href="colgar" onClick={colgar} className="colgar activo">Colgar</a>}
+          <Display telefono={telefono} />
+          <Acciones
+            llamando={llamando}
+            colgar={colgar}
+            llamar={llamar}
+            esCompleto={esCompleto}
+          />
         </div>
       </main>
     </div>
